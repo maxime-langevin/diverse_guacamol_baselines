@@ -217,7 +217,6 @@ class SmilesRnnMoleculeGenerator:
         start_population_size = len(start_population)
 
         training = canonicalize_list(start_population, include_stereocenters=True)
-        print(training)
         if len(training) != start_population_size:
             logger.warning("Some entries for the start population are invalid or duplicated")
             start_population_size = len(training)
