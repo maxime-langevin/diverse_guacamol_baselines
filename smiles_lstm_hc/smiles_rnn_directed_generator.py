@@ -9,7 +9,7 @@ from guacamol.scoring_function import ScoringFunction
 from guacamol.utils.chemistry import canonicalize_list, canonicalize
 from joblib import delayed
 
-from .rnn_generator import SmilesRnnMoleculeGenerator
+from .rnn_generator_memory_RL import SmilesRnnMoleculeGenerator
 from .rnn_utils import load_rnn_model
 
 
@@ -23,7 +23,7 @@ class SmilesRnnDirectedGenerator(GoalDirectedGenerator):
         self.keep_top = keep_top
         self.optimize_batch_size = optimize_batch_size
         self.optimize_n_epochs = optimize_n_epochs
-        self.pretrain_n_epochs = 15
+        self.pretrain_n_epochs = 1
         self.max_len = max_len
         self.number_final_samples = number_final_samples
         self.sample_final_model_only = sample_final_model_only
