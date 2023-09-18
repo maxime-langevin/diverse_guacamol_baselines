@@ -9,7 +9,8 @@ from guacamol.scoring_function import ScoringFunction
 from guacamol.utils.chemistry import canonicalize_list, canonicalize
 from joblib import delayed
 
-from .rnn_generator_memory_RL import SmilesRnnMoleculeGenerator
+from .rnn_generator_memory_RL import SmilesRnnMoleculeGeneratorMemoryRL
+from .rnn_generator import SmilesRnnMoleculeGenerator
 from .rnn_utils import load_rnn_model
 
 
@@ -47,7 +48,7 @@ class SmilesRnnDirectedGenerator(GoalDirectedGenerator):
         return [smile for score, smile in scored_smiles][:k]
 
     def generate_optimized_molecules(self, scoring_function: ScoringFunction, number_molecules: int,
-                                     starting_population: Optional[List[str]] = None, get_history=False, beta=1, threshold=0.4) -> List[str]:
+                                     starting_population: Optional[List[str]] = None, get_history=False, beta=1, threshold=0.4, use_memory_rl=False) -> List[str]:
 
         # fetch initial population?
         if starting_population is None:
@@ -63,8 +64,12 @@ class SmilesRnnDirectedGenerator(GoalDirectedGenerator):
         model_def = Path(self.pretrained_model_path).with_suffix('.json')
 
         model = load_rnn_model(model_def, self.pretrained_model_path, device, copy_to_cpu=True)
-
-        generator = SmilesRnnMoleculeGenerator(model=model,
+        if use_memory_rl:
+            generator = SmilesRnnMoleculeGeneratorMemoryRL(model=model,
+                                               max_len=self.max_len,
+                                               device=device)
+        else:
+            generator = SmilesRnnMoleculeGenerator(model=model,
                                                max_len=self.max_len,
                                                device=device)
 
