@@ -48,7 +48,7 @@ class OptResult:
         return (self.score, self.smiles) < (other.score, other.smiles)
 
 
-class SmilesRnnMoleculeGenerator:
+class SmilesRnnMoleculeGeneratorMemoryRL:
     """
     character-based RNN language model optimized by with hill-climbing
     """
@@ -144,8 +144,7 @@ class SmilesRnnMoleculeGenerator:
                 if not within_buckets:
                     candidates_scores[i] = s
                     self.memory_buckets.append({smiles: 1})
-            print(self.memory_buckets)  
-            print(np.sum([list(bucket.values())[0] for bucket in self.memory_buckets]))
+
             train_results = [OptResult(smiles=smiles, score=score) for smiles, score in zip(candidates, candidates_scores)]
             train_results.sort(reverse=True)
             t2 = time.time()
